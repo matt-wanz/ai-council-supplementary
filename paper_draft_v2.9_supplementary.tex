@@ -1,0 +1,152 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{microtype}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\providecommand{\checkmark}{\ensuremath{\checkmark}}
+\providecommand{\tightlist}{\setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+\title{Supplementary Material --- AI Council: From Collaboration to Governance (v2.9.2, 2026-10-08)}
+\author{Zheng Wan \quad Independent Researcher (matt.wanzheng@gmail.com) \\ \and Tiara Wan \quad Liberal Arts (Boya) College, Chongqing University (tiarawzy@gmail.com)}
+\date{September 2026 (v2.9.2, 2026-10-08)}
+
+\begin{document}
+\maketitle
+
+
+
+\emph{This supplementary package accompanies the submission. Contents: Appendix A (empirical data source index), Narrow-Domain F1 Detail, Appendix C (lessons learned L7--L11), Table S1 (19 failure modes $\rightarrow$ governance module mapping), and Appendix E (control-plane integrity).}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section*{Appendix A: Empirical Data Source Index}
+
+
+\begin{table}[htbp]
+\caption{Appendix A: Empirical Data Source Index and Reproducibility Anchors}
+\centering
+\small
+\begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{6cm}>{\raggedright\arraybackslash}X}
+\toprule
+Paper Metric / Claim
+& Source (Reproducible)
+\\
+\midrule
+Net correction $-$3 (session-level +9/$-$12; member-level +8/$-$11) & \texttt{data/meetings/trackm/} 24 sessions \texttt{net\_correction.json} + verification report (dual-caliber comparison table) \\
+Consensus 37.5\% / dissent preservation 62.5\%; D0=0/D1=100\%/D2=100\% & Ibid. 24 sessions \texttt{gates.json} \\
+F1 0.06 vs 0.34 (p\textless0.0001, 87 sessions) & \texttt{data/exp/runs/e1\_batch\_1-3} + narrow-domain analysis report \\
+Governance contrast four failure modes zeroed out & Run 1/Run 2 \texttt{gates.json} + \texttt{qa\_report\_g3\_run2.md} \\
+Coverage 33.3\%$\rightarrow$83.3\%, re-query recovery rate 66.7\% & \texttt{symposium\_20260905\_212526\_b25d55/gates.json} (S1--S6 pre-registered acceptance script) \\
+120-condition primary benchmark + 600 GT items & \texttt{data/exp/test\_main\_120.jsonl} + \texttt{gt/} (\texttt{gt\_summary.json}, G1 gate) \\
+Eight-model behavioral spectrum & \texttt{trackm\_stepf\_all\_results.json} + verification report (eight-model behavioral signature archive, data file internal entries persona-01\textasciitilde08) \\
+Strong-weak performance gap 31.3pp; H6 coverage containment & \texttt{trackm\_stepb2/stepc2} report \\
+361 automated test cases & \texttt{pytest\ backend/} (2026-09-05, 353 baseline + SPEC-84 v1.2 new 8 items) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+All artifacts cited in Appendix A are maintained in the authors' internal evidence repository with immutable raw traces; the internal paths above serve as artifact identifiers within that repository. Materials are available from the authors upon request and will be released publicly upon acceptance.
+
+E2--E6 design parameters are detailed in §5.3 declarations and Phase B experimental plan (design-ready, not fully executed).
+
+\section*{Narrow-Domain F1 Detail}
+
+\textbf{False-Positive Analysis}: In the 40-commit narrow-domain evaluation (18 samples analyzed), 83\% of false positives were procedural meta-discourse mis-captured by the extraction layer; filtering (zero-API replay) raised Macro F1 to 0.0698.
+
+\section*{Appendix C: Lessons Learned L7--L11 (Preserved from Body Reductions; renumbered after body gained L6)}
+
+\textbf{L7 Direct insertion of AI-generated content into frontend interfaces creates security debt.} ISSUES-021: \texttt{\textless{}script\textgreater{}} tags appearing in agent discussions were injected verbatim into HTML reports, resulting in stored Cross-Site Scripting (XSS). \emph{Recommendation: All AI outputs must be sanitized as untrusted inputs across every rendering pathway.}
+
+\textbf{L8 Evaluation extraction layers must distinguish "findings regarding code" from "meta-comments regarding meeting processes".} In Batch 1 initial metric evaluations, 83\% of the false positive (FP) pool arose because the extraction layer misclassified internal meeting discipline discussions (e.g., "C-004 rebuttal lacks direct quotation, violating R4.2") as code defect items---the model did not hallucinate; rather, the extractor failed to differentiate discourse types. Remediation via a procedural meta-discourse classifier (pure rules: claim citations, discipline rule numbers, procedural keyword lexicons) restored metric credibility upon zero-API full replay. \emph{Recommendation: Governance mechanisms inherently generate procedural meta-discourse as an authentic facet of system behavior---evaluation extraction layers must decouple both discourse streams, archiving filtered meta-discourse separately as governance audit assets (as practiced in this study, with 488 procedural items archived).}
+
+\textbf{L9 Procedural credibility in multi-AI collaboration requires institutional enforcement.} Throughout project development, multiple instances emerged where AI collaborators reported outcomes at variance with disk artifacts (mental arithmetic errors in test counts, fabricated audit verdicts, phantom citations, reversed concession roles), each falsified via independent replication and disk audits. This led to firm rules: self-reported numbers must attach raw terminal outputs; narrative conclusions must cite claim IDs; automated phantom citation detection scripts; and automated four-tier reconciliation gates (transforming "claimed counted" into "counted by script")---eliminating self-report discrepancies post-enforcement. \emph{Recommendation: Wherever AI-generated reports enter the decision chain, treating self-reports as unverified must serve as the default discipline---the rigor with which we govern experimental data embodies the governance philosophy championed in this paper.}
+
+\textbf{L10 Full-coverage cross-examination exhibits capacity boundaries requiring morphological re-query designs.} Under extensive argumentative text (56 claims), cross-examination coverage dropped to 33\%: structural capacity gaps (one utterance per round targeting one claim) compounded by examination skew (over-allocation to contentious issues, zero coverage for opening claims) and context assembly flaws; short-claim meetings (24 choice-track stances) achieved 100\% coverage. Targeted re-query rounds (up to one directed query round without exemption pathways) verified via smoke testing elevated coverage to 83\% (66.7\% recovery rate), with residual items escalated to human review---\textbf{better to escalate to humans than compromise standards}. \emph{Recommendation: Coverage gates must scale budgets to claim morphology, with built-in targeted re-query and loud failure mechanisms (prohibiting silent execution under empty contexts).}
+
+\textbf{L11 Fallback fault-tolerance preserves pipeline execution, not deliberation quality---council completeness is a first-order variable of deliberation output.} During headless pipeline acceptance, 2 of 4 council seats were disqualified due to credential expiration; the truncated council (2/4) completed 3 full sessions supported by degradation protocols (zero pipeline interruptions, all artifacts generated), yet all three sessions yielded exactly 0 consensus items; restoring credentials to a full council (4/4) produced 3 consensus items in a single session with execution duration halved (7 minutes vs.~12--16 minutes). Case-level evidence (\(n=3\) vs.~\(n=1\), confounding scale and diversity) precludes quantitative claims, yet indicates a clear vector: \textbf{for deliberation systems, pipeline availability is a necessary but insufficient condition---every absent member thins the evidentiary substrate until consensus loses raw material.} \emph{Recommendation: Experimental pre-flight checks for multi-agent deliberation systems must incorporate council health gates (credential validity and degradation status checks), treating council completeness as a formalized ablation dimension rather than an operational anomaly (§5.7.4).}
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section*{Table S1: 19 Documented AI-Conclusion Failure Modes $\rightarrow$ Governance Module Combination Mapping}
+
+
+\begin{table}[htbp]
+\caption{Table S1: 19 Documented AI-Conclusion Failure Modes to Governance Module Combination Mapping}
+\centering
+\small
+\begin{tabularx}{\textwidth}{c>{\raggedright\arraybackslash}p{4cm}>{\raggedright\arraybackslash}p{5cm}>{\raggedright\arraybackslash}X}
+\toprule
+\#
+& Failure Mode
+& Governance Module Combination
+& Key Mechanism / Threshold
+\\
+\midrule
+F1 & Anchoring effect & Blind review isolation + moderator last + Full Reveal & Independent calls mutually invisible (D6) \\
+F2 & Conformity and sycophancy & Blind phase + R5.1 + Steelman & Conformity patterns $\rightarrow$ BLOCK without vote \\
+F3 & Hallucination and fabrication & HG-1\textasciitilde6 + R3.2 zero tolerance & Sourceless precise data $\rightarrow$ BLOCK \\
+F4 & Fictitious citations & CV-1\textasciitilde4 + EvidenceStore & Official citations must resolve to evidence records \\
+F5 & Scope creep & TopicGate + R2.2 + contract locking & Relevance \textless0.20 intercepted; taboo terms BLOCKED \\
+F6 & Authority amplification & FIX-A claim provenance & 0 citations flagged ``{[}Moderator New Claim{]}'' \\
+F7 & Belief contagion & FIX-B fact gate + evidence grading & Unverified assertion warnings pre-convergence \\
+F8 & Equal-weight dilution & FIX-C authority weighting & Citation/evidence rates in weights; red lines \\
+F9 & Minority dissent suppression & FIX-D + single-agent veto & High-evidence vetoes $\rightarrow$ human\_review \\
+F10 & Defensive antagonism & FIX-E + Steelman & ``Objective input, not criticism'' injected \\
+F11 & Unsubstantiated high confidence & CV-4 + engineering\_veto & conf $\ge$0.9 without evidence $\rightarrow$ score zeroed \\
+F12 & Knowledge-cutoff blind spots & Phase 0 declaration + R3.3 & Mandatory cutoff declaration; {[}UNCERTAIN{]} tag \\
+F13 & Logical silos & R5.2 + business\_logic\_veto & Cross-examination must target first-round claims \\
+F14 & Budget overrun & TokenGuardian + budget\_veto & Four-tier breaker; \textgreater90\% daily limit $\rightarrow$ veto \\
+F15 & Lack of traceability & ClaimLedger + TraceLogger + provenance & Audit trail incl.~intercepted utterances \\
+F16 & Non-compliant utterances & ComplianceEngine + dual review & BLOCK rollback $\le$3; 3 strikes $\rightarrow$ deactivation \\
+F17 & Lack of accountability & HumanGate + 5 checkpoints + $\ge$85 & D8 never auto-submits; 9 human signals \\
+F18 & Forced convergence & DegradationProtocol + alignment\_veto + HumanGate & Six-source scan; conf \textless0.50 $\rightarrow$ open\_issues \\
+F19 & Expert mismatch / roster noise & TaskClassifier + NodeSampler + ScoreMatrix + MessagePassing & Dynamic top-k admission; trust pruning; directed passing \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+
+
+\begin{center}\rule{0.5\linewidth}{0.5pt}\end{center}
+
+\section*{Appendix E: Control-Plane Integrity --- Incident Ledger, Production Case, and Protocol Evolution (v2.9.2, 2026-10-08)}
+
+\emph{Added per the Evidence-Claim Alignment Pass (2026-09-15). Case-level material; nothing in this appendix alters the frozen raw traces, ledgers, or statistics.}
+
+\subsection*{E.1 Incident Ledger (Meta-Governance Candidates)}
+
+Two production control-plane incidents (2026-09) are recorded as \textbf{meta-governance / infrastructure candidates} --- deliberately not numbered into the 19-mode taxonomy until recurrence review:
+
+\begin{table}[htbp]
+\caption{Table S2: Control-Plane Incident Ledger (Candidate Failure Modes)}
+\centering
+\small
+\begin{tabularx}{\textwidth}{l>{\raggedright\arraybackslash}p{2.5cm}>{\raggedright\arraybackslash}p{4cm}>{\raggedright\arraybackslash}X}
+\toprule
+ID & Incident & Root pattern & Mechanism response (SPEC-82/83, 244 tests green) \\
+\midrule
+CP-1 & Provider advertised a model as available (\texttt{/models} listing) while generation calls failed on quota/balance state & \textbf{Provider false readiness} --- declared availability $\neq$ behavioral readiness & Preflight generation probe + quota/balance health check before meeting start \\
+\addlinespace
+CP-2 & An automated accept action fired after adjournment and restarted a closed meeting & \textbf{State-transition misuse / external automation interference} --- control actions not validated against meeting phase & Expected-state transition validation, idempotency keys, phase locks, and a control-action audit log \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Lessons (condensed into body §7 L6): \emph{readiness is behavioral, not declarative; control actions must be state-validated.}
+
+\subsection*{E.2 Production Case: Governed Claim-Auditing Session (Case-Level Observation)}
+
+A 45-minute governed review session over a full paper draft (2026-09-13, production pipeline; meeting ledger \texttt{eb29b6f6-8032-4510-bc7f-06b90f956cf8}, terminal state \texttt{closed}): four heterogeneous committee models (DeepSeek moderator + Gemini-3.8 + LongCat + Qwen3.8), 30 utterances, cross-examination coverage enforced, 3 soft-consensus items with dissent archived, 5 actionable tasks emitted, internal quality score 69.2/100 (engineering 19.7, domain 18.5, token 15.0, human-alignment 16.0; source: internal evaluation record of the session). Notable case-level observation: the committee independently flagged a statistical-disclosure gap in the draft (a point estimate reported without confidence interval), which was closed in revision. This case is cited as production evidence of claim-auditing behavior \textbf{at case level only} --- it is not a controlled evaluation and contributes no aggregate statistics.
+
+\subsection*{E.3 Protocol Evolution Direction (Design Refinement, Not a Verified Contribution)}
+
+The review-session protocol is being refined from ``free statement $\rightarrow$ two review rounds $\rightarrow$ consensus'' toward five stages: \textbf{Discovery $\rightarrow$ Challenge $\rightarrow$ Repair $\rightarrow$ Verification $\rightarrow$ Tasking} --- the second round shifts from repeated review to a claim-repair test (flagged claim $\rightarrow$ owner repair $\rightarrow$ independent verification). This direction is recorded as a design refinement and future protocol extension; it has \textbf{not} been validated by a controlled experiment and supports no performance claim.
+
+\end{document}
